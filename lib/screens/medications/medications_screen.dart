@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import '../../services/medication_service.dart';
+import 'add_medication.dart';
 
 class MedicationsScreen extends StatefulWidget {
   @override
@@ -21,15 +23,6 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
     setState(() {
       _medications = medications;
     });
-  }
-
-  Future<void> _addMedication() async {
-    await _medicationService.addMedication({
-      'id': DateTime.now().toString(),
-      'name': 'Ibuprofeno',
-      'description': 'Anti-inflamatório usado para tratar dores e febres.',
-    });
-    _loadMedications();
   }
 
   Future<void> _deleteMedication(String id) async {
@@ -54,14 +47,26 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
                   title: Text(medication['name'] ?? ''),
                   subtitle: Text(medication['description'] ?? ''),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () => _deleteMedication(medication['id']),
                   ),
                 );
               },
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addMedication,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddMedicationScreen(
+                onAddMedication: (newMedication) async {
+                  await _medicationService.addMedication(newMedication);
+                  _loadMedications();
+                },
+              ),
+            ),
+          );
+        },
         child: Icon(Icons.add),
       ),
     );
