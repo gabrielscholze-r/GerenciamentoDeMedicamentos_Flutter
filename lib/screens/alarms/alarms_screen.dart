@@ -1,8 +1,9 @@
 import 'package:example_project/models/medication.dart';
 import 'package:example_project/screens/alarms/add_alarm.dart';
+import 'package:example_project/screens/alarms/alarm_details.dart'; // Import da tela de detalhes
 import 'package:flutter/material.dart';
 import '../../services/alarm_service.dart';
-import '../../services/medication_service.dart'; // Serviço para obter os medicamentos
+import '../../services/medication_service.dart';
 
 class AlarmsScreen extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
     final medicationName = medication['name'];
     final intervalHours = alarm['interval'] ?? 0;
 
-    return '$medicationName - $intervalHours em $intervalHours horas';
+    return '$medicationName - $intervalHours horas';
   }
 
   @override
@@ -72,6 +73,17 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                 return ListTile(
                   leading: Icon(Icons.alarm),
                   title: Text(_formatAlarmTitle(alarm)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AlarmDetailsScreen(
+                          alarm: alarm,
+                          medications: _medications,
+                        ),
+                      ),
+                    );
+                  },
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () => _deleteAlarm(alarm['id']),

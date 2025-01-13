@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../../services/medication_service.dart';
 import 'add_medication.dart';
+import 'medication_details.dart';
 
 class MedicationsScreen extends StatefulWidget {
   @override
@@ -50,6 +51,16 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () => _deleteMedication(medication['id']),
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MedicationDetailsScreen(
+                          medication: medication,
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),
