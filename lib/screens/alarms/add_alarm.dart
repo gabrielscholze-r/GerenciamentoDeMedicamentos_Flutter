@@ -1,5 +1,6 @@
-import 'package:example_project/models/medication.dart';
 import 'package:flutter/material.dart';
+import 'package:example_project/models/medication.dart';
+import 'package:example_project/services/alarm_service.dart';
 
 class AddAlarmScreen extends StatefulWidget {
   final Function(Map<String, dynamic>) onAddAlarm;
@@ -21,7 +22,8 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
   void _calculateNextTime() {
     if (_interval > 0 || _days > 0) {
       final now = DateTime.now();
-      final calculatedNextTime = now.add(Duration(hours: _interval, days: _days));
+      final calculatedNextTime =
+          now.add(Duration(hours: _interval, days: _days));
       setState(() {
         _nextTime = calculatedNextTime;
       });
@@ -44,13 +46,15 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
   void _saveAlarm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
       final newAlarm = {
-        'id': DateTime.now().toString(),
+        'id': DateTime.now().millisecondsSinceEpoch.toString(),
         'medicationId': _selectedMedicationId,
-        'nextTime': _nextTime?.toIso8601String(),
+        'nextTime': _nextTime!.toIso8601String(),
         'interval': _interval,
         'days': _days,
       };
+
       widget.onAddAlarm(newAlarm);
       Navigator.pop(context);
     }
@@ -104,7 +108,9 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   ),
                   keyboardType: TextInputType.number,
                   validator: (value) {
-                    if (value == null || value.isEmpty || int.tryParse(value) == null) {
+                    if (value == null ||
+                        value.isEmpty ||
+                        int.tryParse(value) == null) {
                       return "Por favor, insira um intervalo válido.";
                     }
                     return null;
@@ -124,8 +130,8 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   ),
                   keyboardType: TextInputType.number,
                   validator: (value) {
-                    if (value == null || value.isEmpty || int.tryParse(value) == null) {
-                      return "Por favor, insira um número válido de dias.";
+                    if (value == null || value.isEmpty) {
+                      return "Por favor, insira um número de dias.";
                     }
                     return null;
                   },
@@ -137,12 +143,7 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   },
                 ),
                 SizedBox(height: 16),
-                ListTile(
-                  title: Text(
-                    "Próxima Hora: ${_formatNextTime(_nextTime)}",
-                  ),
-                  leading: Icon(Icons.access_time),
-                ),
+                Text("Próximo horário: ${_formatNextTime(_nextTime)}"),
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _saveAlarm,

@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:example_project/models/medication.dart';
 import 'package:example_project/screens/alarms/add_alarm.dart';
-import 'package:example_project/screens/alarms/alarm_details.dart'; // Import da tela de detalhes
-import 'package:flutter/material.dart';
+import 'package:example_project/screens/alarms/alarm_details.dart'; 
 import '../../services/alarm_service.dart';
 import '../../services/medication_service.dart';
 
