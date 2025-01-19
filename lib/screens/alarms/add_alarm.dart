@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medic/models/medication.dart';
 import 'package:medic/services/alarm_service.dart';
-import 'package:medic/notification/notification.dart';  // Adicionando o import correto
+import 'package:medic/notification/notification.dart';
 
 class AddAlarmScreen extends StatefulWidget {
   final Function(Map<String, dynamic>) onAddAlarm;
@@ -185,7 +185,24 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   onPressed: _saveAlarm,
                   child: Text("Salvar Alarme"),
                 ),
+                SizedBox(height: 16),
+                //test button
+                // ElevatedButton(
+                //   onPressed: () async {
+                //     if (_selectedMedicationId == null) {
+                //       ScaffoldMessenger.of(context).showSnackBar(
+                //         SnackBar(content: Text('Selecione um medicamento antes de adicionar o alarme de teste.')),
+                //       );
+                //       return;
+                //     }
 
+                //     await _alarmService.addTestAlarm(_selectedMedicationId!);
+                //     ScaffoldMessenger.of(context).showSnackBar(
+                //       SnackBar(content: Text('Alarme de teste adicionado para o medicamento selecionado.')),
+                //     );
+                //   },
+                //   child: Text("Adicionar Alarme de Teste"),
+                // ),
               ],
             ),
           ),

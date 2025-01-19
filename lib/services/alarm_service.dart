@@ -1,3 +1,4 @@
+import 'package:medic/notification/notification.dart';
 import '../storage/storage_manager.dart';
 
 class AlarmService {
@@ -15,7 +16,8 @@ class AlarmService {
 
   Future<void> updateAlarm(Map<String, dynamic> updatedAlarm) async {
     final alarms = await getAllAlarms();
-    final index = alarms.indexWhere((alarm) => alarm['id'] == updatedAlarm['id']);
+    final index =
+        alarms.indexWhere((alarm) => alarm['id'] == updatedAlarm['id']);
     if (index != -1) {
       alarms[index] = updatedAlarm;
       await StorageManager.writeJson(_fileName, alarms);
@@ -45,5 +47,32 @@ class AlarmService {
         await deleteAlarm(alarmId);
       }
     }
+  }
+
+  Future<void> addTestAlarm(String medicationId) async {
+    if (medicationId.isEmpty) return;
+
+    final alarmId = DateTime.now().millisecondsSinceEpoch.toString();
+    final nextTime = DateTime.now().add(Duration(seconds: 10));
+
+    final alarm = {
+      'id': alarmId,
+      'medicationId': medicationId,
+      'nextTime': nextTime.toIso8601String(),
+      'interval': 0,
+      'days': 0,
+      'remaining': 1,
+    };
+
+    final alarms = await getAllAlarms();
+    alarms.add(alarm);
+    await StorageManager.writeJson(_fileName, alarms);
+
+    await NotificationService.scheduleNotification(
+      int.parse(alarmId),
+      'Alarme de Teste',
+      'É hora de tomar o medicamento do teste!',
+      nextTime,
+    );
   }
 }
