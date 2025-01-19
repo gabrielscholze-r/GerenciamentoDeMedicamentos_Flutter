@@ -4,19 +4,14 @@ import 'package:timezone/timezone.dart' as tz;
 class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  static Future<void> onDidReceiveNotification(NotificationResponse notificationResponse) async {
-    print("Notification received");
-  }
-
   static Future<void> init() async {
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings("@mipmap/ic_launcher");
-    const DarwinInitializationSettings iOSInitializationSettings = DarwinInitializationSettings();
 
     const InitializationSettings initializationSettings = InitializationSettings(
       android: androidInitializationSettings,
-      iOS: iOSInitializationSettings,
     );
+
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: onDidReceiveNotification,
@@ -28,15 +23,17 @@ class NotificationService {
         ?.requestNotificationsPermission();
   }
 
+  static Future<void> onDidReceiveNotification(NotificationResponse notificationResponse) async {}
+
   static Future<void> showInstantNotification(String title, String body) async {
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
-        android: AndroidNotificationDetails(
-          'instant_notification_channel_id',
-          'Instant Notifications',
-          importance: Importance.max,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails());
+      android: AndroidNotificationDetails(
+        'instant_notification_channel_id',
+        'Instant Notifications',
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+    );
 
     await flutterLocalNotificationsPlugin.show(
       0,
@@ -68,5 +65,4 @@ class NotificationService {
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
   }
-
 }

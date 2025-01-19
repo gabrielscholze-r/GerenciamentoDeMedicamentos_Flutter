@@ -1,12 +1,11 @@
+import 'dart:async';
 import 'package:medic/notification/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:medic/models/medication.dart';
 import 'package:medic/screens/alarms/add_alarm.dart';
 import 'package:medic/screens/alarms/alarm_details.dart';
-import 'package:medic/screens/alarms/alarm_details.dart';
 import '../../services/alarm_service.dart';
 import '../../services/medication_service.dart';
-import '../../notification/notification.dart';
 
 class AlarmsScreen extends StatefulWidget {
   @override
@@ -18,11 +17,21 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
   final MedicationService _medicationService = MedicationService();
   List<Map<String, dynamic>> _alarms = [];
   List<Map<String, dynamic>> _medications = [];
+  Timer? _alarmMonitorTimer;
 
   @override
   void initState() {
     super.initState();
     _loadData();
+    _alarmMonitorTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+      _checkExpiredAlarms();
+    });
+  }
+
+  @override
+  void dispose() {
+    _alarmMonitorTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -45,6 +54,16 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
     });
   }
 
+  Future<void> _checkExpiredAlarms() async {
+    for (var alarm in _alarms) {
+      final nextTime = DateTime.parse(alarm['nextTime']);
+      if (nextTime.isBefore(DateTime.now())) {
+        await _alarmService.processAlarm(alarm['id']);
+      }
+    }
+    _loadAlarms();
+  }
+
   Future<void> _deleteAlarm(String id) async {
     await _alarmService.deleteAlarm(id);
     _loadAlarms();
@@ -55,12 +74,10 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
       (med) => med['id'] == alarm['medicationId'],
       orElse: () => {'name': 'Medicamento não encontrado'},
     );
-
     final medicationName = medication['name'];
     final intervalHours = alarm['interval'] ?? 0;
     final nextTime = DateTime.parse(alarm['nextTime']);
     final formattedNextTime = _formatNextTime(nextTime);
-
     return '$medicationName - $intervalHours horas\nPróxima: $formattedNextTime';
   }
 
