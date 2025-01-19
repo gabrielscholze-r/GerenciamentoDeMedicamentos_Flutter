@@ -1,9 +1,12 @@
+import 'package:medic/notification/notification.dart';
 import 'package:flutter/material.dart';
-import 'package:example_project/models/medication.dart';
-import 'package:example_project/screens/alarms/add_alarm.dart';
-import 'package:example_project/screens/alarms/alarm_details.dart'; 
+import 'package:medic/models/medication.dart';
+import 'package:medic/screens/alarms/add_alarm.dart';
+import 'package:medic/screens/alarms/alarm_details.dart';
+import 'package:medic/screens/alarms/alarm_details.dart';
 import '../../services/alarm_service.dart';
 import '../../services/medication_service.dart';
+import '../../notification/notification.dart';
 
 class AlarmsScreen extends StatefulWidget {
   @override
@@ -32,6 +35,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
     setState(() {
       _alarms = alarms;
     });
+    _scheduleNotifications();
   }
 
   Future<void> _loadMedications() async {
@@ -54,8 +58,34 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
 
     final medicationName = medication['name'];
     final intervalHours = alarm['interval'] ?? 0;
+    final nextTime = DateTime.parse(alarm['nextTime']);
+    final formattedNextTime = _formatNextTime(nextTime);
 
-    return '$medicationName - $intervalHours horas';
+    return '$medicationName - $intervalHours horas\nPróxima: $formattedNextTime';
+  }
+
+  String _formatNextTime(DateTime nextTime) {
+    final hour = nextTime.hour.toString().padLeft(2, '0');
+    final minute = nextTime.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
+  Future<void> _scheduleNotifications() async {
+    for (var alarm in _alarms) {
+      final nextTime = DateTime.parse(alarm['nextTime']);
+      if (nextTime.isBefore(DateTime.now())) {
+        await _deleteAlarm(alarm['id']);
+      } else {
+        NotificationService.scheduleNotification(
+          int.parse(alarm['id'].toString()),
+          'Alarme para ${_medications.firstWhere((med) => med['id'] == alarm['medicationId'], orElse: () => {
+                'name': 'Medicamento não encontrado'
+              })['name']}',
+          'É hora de tomar o medicamento!',
+          nextTime,
+        );
+      }
+    }
   }
 
   @override
@@ -105,6 +135,12 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
                     _alarms.add(newAlarm);
                   });
                   _alarmService.addAlarm(newAlarm);
+                  NotificationService.scheduleNotification(
+                    int.parse(newAlarm['id'].toString()),
+                    'Alarme para ${_medications.firstWhere((med) => med['id'] == newAlarm['medicationId'])['name']}',
+                    'É hora de tomar o medicamento!',
+                    DateTime.parse(newAlarm['nextTime']),
+                  );
                 },
               ),
             ),

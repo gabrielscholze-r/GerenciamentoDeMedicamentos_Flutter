@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:example_project/models/medication.dart';
-import 'package:example_project/services/alarm_service.dart';
+import 'package:medic/models/medication.dart';
+import 'package:medic/services/alarm_service.dart';
+import 'package:medic/notification/notification.dart';  // Adicionando o import correto
 
 class AddAlarmScreen extends StatefulWidget {
   final Function(Map<String, dynamic>) onAddAlarm;
@@ -14,6 +15,7 @@ class AddAlarmScreen extends StatefulWidget {
 
 class _AddAlarmScreenState extends State<AddAlarmScreen> {
   final _formKey = GlobalKey<FormState>();
+  final AlarmService _alarmService = AlarmService();
   String? _selectedMedicationId;
   DateTime? _nextTime;
   int _interval = 0;
@@ -34,6 +36,12 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
     }
   }
 
+  int _calculateRemaining(int intervalHours, int days) {
+    if (intervalHours <= 0 || days <= 0) return 0;
+    final totalHours = days * 24;
+    return (totalHours / intervalHours).floor();
+  }
+
   String _formatNextTime(DateTime? dateTime) {
     if (dateTime == null) return "Não definida";
     final day = dateTime.day.toString().padLeft(2, '0');
@@ -43,9 +51,18 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
     return "$day/$month $hour:$minute";
   }
 
-  void _saveAlarm() {
+  Future<void> _saveAlarm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
+      final remaining = _calculateRemaining(_interval, _days);
+
+      if (remaining == 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('O número de alarmes calculado é inválido.')),
+        );
+        return;
+      }
 
       final newAlarm = {
         'id': DateTime.now().millisecondsSinceEpoch.toString(),
@@ -53,9 +70,24 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
         'nextTime': _nextTime!.toIso8601String(),
         'interval': _interval,
         'days': _days,
+        'remaining': remaining,
       };
 
       widget.onAddAlarm(newAlarm);
+      await _alarmService.addAlarm(newAlarm);
+
+      NotificationService.showInstantNotification(
+        'Alarme Criado',
+        'Você criou um novo alarme para tomar o medicamento ${widget.medications.firstWhere((med) => med.id == _selectedMedicationId).name}.',
+      );
+
+      NotificationService.scheduleNotification(
+        int.parse(newAlarm['id'].toString()),
+        'Alarme para ${widget.medications.firstWhere((med) => med.id == _selectedMedicationId).name}',
+        'É hora de tomar o medicamento!',
+        _nextTime!,
+      );
+
       Navigator.pop(context);
     }
   }
@@ -110,7 +142,8 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   validator: (value) {
                     if (value == null ||
                         value.isEmpty ||
-                        int.tryParse(value) == null) {
+                        int.tryParse(value) == null ||
+                        int.parse(value) <= 0) {
                       return "Por favor, insira um intervalo válido.";
                     }
                     return null;
@@ -130,8 +163,11 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   ),
                   keyboardType: TextInputType.number,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Por favor, insira um número de dias.";
+                    if (value == null ||
+                        value.isEmpty ||
+                        int.tryParse(value) == null ||
+                        int.parse(value) <= 0) {
+                      return "Por favor, insira um número válido de dias.";
                     }
                     return null;
                   },
@@ -149,6 +185,7 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   onPressed: _saveAlarm,
                   child: Text("Salvar Alarme"),
                 ),
+
               ],
             ),
           ),

@@ -3,12 +3,14 @@ class Alarm {
   final String medicationId;
   final DateTime nextTime;
   final Duration interval;
+  final int remaining;
   final int days;
 
   Alarm({
     required this.id,
     required this.medicationId,
     required this.nextTime,
+    required this.remaining,
     required this.interval,
     required this.days,
   });
@@ -18,6 +20,7 @@ class Alarm {
       id: json['id'],
       medicationId: json['medicationId'],
       nextTime: DateTime.parse(json['nextTime']),
+      remaining: int.parse(json['remaining']),
       interval: Duration(hours: json['interval']),
       days: json['days'],
     );
@@ -27,6 +30,7 @@ class Alarm {
         'id': id,
         'medicationId': medicationId,
         'nextTime': nextTime.toIso8601String(),
+        'remaining': remaining,
         'interval': interval.inHours,
         'days': days,
       };
