@@ -38,7 +38,7 @@ class MedicationDetailsScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Color(0x29000000),
+                  color: Color(0x809F9FED),
                   offset: Offset(0, 4),
                   blurRadius: 8,
                   spreadRadius: 1,
