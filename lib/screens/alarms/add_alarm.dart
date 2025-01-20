@@ -22,10 +22,9 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
   int _days = 0;
 
   void _calculateNextTime() {
-    if (_interval > 0 || _days > 0) {
+    if (_interval > 0) {
       final now = DateTime.now();
-      final calculatedNextTime =
-          now.add(Duration(hours: _interval, days: _days));
+      final calculatedNextTime = now.add(Duration(hours: _interval));
       setState(() {
         _nextTime = calculatedNextTime;
       });
@@ -38,7 +37,7 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
 
   int _calculateRemaining(int intervalHours, int days) {
     if (intervalHours <= 0 || days <= 0) return 0;
-    final totalHours = days * 24;
+    final totalHours = (days+1) * 24;
     return (totalHours / intervalHours).floor();
   }
 
@@ -175,7 +174,6 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                     setState(() {
                       _days = int.tryParse(value) ?? 0;
                     });
-                    _calculateNextTime();
                   },
                 ),
                 SizedBox(height: 16),
@@ -185,24 +183,6 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   onPressed: _saveAlarm,
                   child: Text("Salvar Alarme"),
                 ),
-                SizedBox(height: 16),
-                //test button
-                // ElevatedButton(
-                //   onPressed: () async {
-                //     if (_selectedMedicationId == null) {
-                //       ScaffoldMessenger.of(context).showSnackBar(
-                //         SnackBar(content: Text('Selecione um medicamento antes de adicionar o alarme de teste.')),
-                //       );
-                //       return;
-                //     }
-
-                //     await _alarmService.addTestAlarm(_selectedMedicationId!);
-                //     ScaffoldMessenger.of(context).showSnackBar(
-                //       SnackBar(content: Text('Alarme de teste adicionado para o medicamento selecionado.')),
-                //     );
-                //   },
-                //   child: Text("Adicionar Alarme de Teste"),
-                // ),
               ],
             ),
           ),

@@ -35,7 +35,15 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Medicamentos'),
+        title: Text(
+          'Medicamentos',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w600,
+            fontSize: 24,
+          ),
+        ),
+        backgroundColor: Color.fromARGB(151, 159, 159, 237),
       ),
       body: _medications.isEmpty
           ? Center(child: Text('Nenhum medicamento adicionado.'))
@@ -43,24 +51,50 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
               itemCount: _medications.length,
               itemBuilder: (context, index) {
                 final medication = _medications[index];
-                return ListTile(
-                  leading: Icon(Icons.medical_services),
-                  title: Text(medication['name'] ?? ''),
-                  subtitle: Text(medication['description'] ?? ''),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _deleteMedication(medication['id']),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MedicationDetailsScreen(
-                          medication: medication,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color.fromARGB(151, 159, 159, 237),
+                          offset: Offset(0, 4),
+                          blurRadius: 6,
+                          spreadRadius: 1,
                         ),
+                      ],
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.medical_services, color: Colors.black,),
+                      title: Text(medication['name'] ?? '',
+                      style: const TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+            fontSize: 22
+          )),
+                      subtitle: Text(medication['description'] ?? '',
+                      style: const TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w400,
+          )),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.grey),
+                        onPressed: () => _deleteMedication(medication['id']),
                       ),
-                    );
-                  },
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MedicationDetailsScreen(
+                              medication: medication,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 );
               },
             ),
@@ -78,6 +112,7 @@ class _MedicationsScreenState extends State<MedicationsScreen> {
             ),
           );
         },
+        backgroundColor: Color.fromARGB(151, 159, 159, 237),
         child: Icon(Icons.add),
       ),
     );

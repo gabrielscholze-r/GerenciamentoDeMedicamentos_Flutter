@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:medic/notification/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:medic/models/medication.dart';
@@ -78,7 +79,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
     final intervalHours = alarm['interval'] ?? 0;
     final nextTime = DateTime.parse(alarm['nextTime']);
     final formattedNextTime = _formatNextTime(nextTime);
-    return '$medicationName - $intervalHours horas\nPróxima: $formattedNextTime';
+    return '$medicationName - a cada $intervalHours horas\nPróxima: $formattedNextTime';
   }
 
   String _formatNextTime(DateTime nextTime) {
@@ -109,7 +110,14 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Alarmes'),
+        title: Text(
+          'Alarmes',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: Color.fromARGB(151, 159, 159, 237),
       ),
       body: _alarms.isEmpty
           ? Center(child: Text('Nenhum alarme adicionado.'))
@@ -117,27 +125,56 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
               itemCount: _alarms.length,
               itemBuilder: (context, index) {
                 final alarm = _alarms[index];
-                return ListTile(
-                  leading: Icon(Icons.alarm),
-                  title: Text(_formatAlarmTitle(alarm)),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AlarmDetailsScreen(
-                          alarm: alarm,
-                          medications: _medications,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromARGB(86, 159, 159, 237),
+                          offset: Offset(0, 4),
+                          blurRadius: 6,
+                          spreadRadius: 1,
                         ),
+                      ],
+                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.alarm, color: Colors.black,),
+                      title: Text(_formatAlarmTitle(alarm),
+                      style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w400,
+          )),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AlarmDetailsScreen(
+                              alarm: alarm,
+                              medications: _medications,
+                              
+                            ),
+                          ),
+                        );
+                      },
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete,
+                        color: Colors.grey
+                        ),
+                        onPressed: () => _deleteAlarm(alarm['id']),
                       ),
-                    );
-                  },
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () => _deleteAlarm(alarm['id']),
+                    ),
                   ),
                 );
               },
+              
             ),
+            backgroundColor: Color.fromARGB(20, 177, 166, 190),
+            
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -163,6 +200,7 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
             ),
           );
         },
+        backgroundColor: const Color.fromARGB(124, 159, 159, 237),
         child: Icon(Icons.add),
       ),
     );
