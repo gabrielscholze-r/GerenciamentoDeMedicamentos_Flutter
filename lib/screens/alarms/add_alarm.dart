@@ -90,6 +90,22 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
     }
   }
 
+  Future<void> _createTestAlarm() async {
+    if (_selectedMedicationId != null) {
+      await _alarmService.addTestAlarm(_selectedMedicationId!);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Alarme de teste criado com sucesso.')),
+      );
+
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Por favor, selecione um medicamento para o teste.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -249,50 +265,30 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                     ),
                   ),
                 ),
-                Padding (
+                Padding(
                   padding: const EdgeInsets.only(top: 16.0),
-                  child:SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_selectedMedicationId != null) {
-                        await _alarmService
-                            .addTestAlarm(_selectedMedicationId!);
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content:
-                                  Text('Alarme de teste criado com sucesso.')),
-                        );
-
-                        Navigator.pop(context);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  'Por favor, selecione um medicamento para o teste.')),
-                        );
-                      }
-                    },
-                    child: Text(
-                      "Criar Alarme de Teste",
-                      style: TextStyle(
-                        color: Color(0xffFEF9FF),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: _createTestAlarm,
+                      child: Text(
+                        "Criar Alarme de Teste",
+                        style: TextStyle(
+                          color: Color(0xffFEF9FF),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff9F9FED),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xff9F9FED),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
                   ),
                 ),
-                )
-                
               ],
             ),
           ),
