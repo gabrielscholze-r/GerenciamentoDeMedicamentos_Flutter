@@ -127,14 +127,13 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Campo de seleção de medicamento com sombra
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0x809F9FED), // 50% de opacidade
+                        color: Color(0x809F9FED),
                         offset: Offset(0, 4),
                         blurRadius: 8,
                       ),
@@ -166,14 +165,13 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   ),
                 ),
                 SizedBox(height: 16),
-                // Campo de intervalo com sombra
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0x809F9FED), // 50% de opacidade
+                        color: Color(0x809F9FED),
                         offset: Offset(0, 4),
                         blurRadius: 8,
                       ),
@@ -204,14 +202,13 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   ),
                 ),
                 SizedBox(height: 16),
-                // Campo de dias com sombra
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0x809F9FED), // 50% de opacidade
+                        color: Color(0x809F9FED),
                         offset: Offset(0, 4),
                         blurRadius: 8,
                       ),
@@ -243,7 +240,6 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                 SizedBox(height: 16),
                 Text("Próximo horário: ${_formatNextTime(_nextTime)}"),
                 SizedBox(height: 24),
-                // Botão "Salvar Alarme" maior
                 SizedBox(
                   width: double.infinity,
                   height: 56,

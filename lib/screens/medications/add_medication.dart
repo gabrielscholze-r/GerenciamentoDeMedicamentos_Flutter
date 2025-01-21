@@ -53,14 +53,13 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
           key: _formKey,
           child: Column(
             children: [
-              // Campo "Nome do Medicamento" com sombra
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0x809F9FED), // 50% de opacidade
+                      color: Color(0x809F9FED),
                       offset: Offset(0, 4),
                       blurRadius: 8,
                     ),
@@ -81,14 +80,13 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                 ),
               ),
               SizedBox(height: 16),
-              // Campo "Descrição" com sombra
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0x809F9FED), // 50% de opacidade
+                      color: Color(0x809F9FED),
                       offset: Offset(0, 4),
                       blurRadius: 8,
                     ),
@@ -110,7 +108,6 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                 ),
               ),
               SizedBox(height: 24),
-              // Botão "Salvar" com tamanho maior
               SizedBox(
                 width: double.infinity,
                 height: 56,

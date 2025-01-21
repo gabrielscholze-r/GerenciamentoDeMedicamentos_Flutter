@@ -14,7 +14,6 @@ class StorageManager {
       final file = File(path);
 
       if (!await file.exists()) {
-        // Cria o arquivo se não existir
         await file.writeAsString(jsonEncode([]));
       }
 
