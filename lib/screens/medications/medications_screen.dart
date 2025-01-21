@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 import '../../services/medication_service.dart';
 import 'add_medication.dart';
 import 'medication_details.dart';

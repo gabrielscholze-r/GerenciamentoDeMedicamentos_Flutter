@@ -127,7 +127,8 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   child: DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       labelText: "Selecione o Medicamento",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
                     ),
                     items: widget.medications.map((medication) {
                       return DropdownMenuItem<String>(
@@ -165,7 +166,8 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   child: TextFormField(
                     decoration: InputDecoration(
                       labelText: "Intervalo (em horas)",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
                     ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
@@ -202,7 +204,8 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                   child: TextFormField(
                     decoration: InputDecoration(
                       labelText: "Dias",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
                     ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
@@ -246,6 +249,50 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                     ),
                   ),
                 ),
+                Padding (
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child:SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_selectedMedicationId != null) {
+                        await _alarmService
+                            .addTestAlarm(_selectedMedicationId!);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('Alarme de teste criado com sucesso.')),
+                        );
+
+                        Navigator.pop(context);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  'Por favor, selecione um medicamento para o teste.')),
+                        );
+                      }
+                    },
+                    child: Text(
+                      "Criar Alarme de Teste",
+                      style: TextStyle(
+                        color: Color(0xffFEF9FF),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xff9F9FED),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+                )
+                
               ],
             ),
           ),
