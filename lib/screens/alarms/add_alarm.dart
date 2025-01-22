@@ -261,30 +261,30 @@ class _AddAlarmScreenState extends State<AddAlarmScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: _createTestAlarm,
-                      child: Text(
-                        "Criar Alarme de Teste",
-                        style: TextStyle(
-                          color: Color(0xffFEF9FF),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff9F9FED),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 16.0),
+                //   child: SizedBox(
+                //     width: double.infinity,
+                //     height: 56,
+                //     child: ElevatedButton(
+                //       onPressed: _createTestAlarm,
+                //       child: Text(
+                //         "Criar Alarme de Teste",
+                //         style: TextStyle(
+                //           color: Color(0xffFEF9FF),
+                //           fontSize: 16,
+                //           fontWeight: FontWeight.bold,
+                //         ),
+                //       ),
+                //       style: ElevatedButton.styleFrom(
+                //         backgroundColor: Color(0xff9F9FED),
+                //         shape: RoundedRectangleBorder(
+                //           borderRadius: BorderRadius.circular(8),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
